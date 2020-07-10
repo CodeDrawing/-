@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
+
+<!--关联数据库配置文件-->
+    <context:property-placeholder location="classpath:database.properties"/>
+
+<!--    连接池
+        dbcp:  半自动化操作，不能自动连接
+        c3p0:   自动化操作，自动化的加载配置文件，并且可以自动设置到配置中
+        druid:
+        hikari:
+
+-->
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/tuduStore"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+
+
+    </bean>
+
+
+<!--&lt;!&ndash;    sqlSessionFactory&ndash;&gt;-->
+<!--    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+<!--        <property name="dataSource" ref="dataSource"/>-->
+<!--&lt;!&ndash;        绑定mybatis配置文件&ndash;&gt;-->
+<!--        <property name="configLocation" value="classpath:mybatis-config.xml"/>-->
+<!--    </bean>-->
+
+<!--&lt;!&ndash;    配置dao接口扫描包，动态实现了dao接口可以注入到spring容器中&ndash;&gt;-->
+<!--    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+<!--&lt;!&ndash;        注入sqlSessionFactory&ndash;&gt;-->
+<!--        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>-->
+<!--&lt;!&ndash;        扫描到dao包&ndash;&gt;-->
+<!--        <property name="basePackage" value="top.zwzx.mapper.UserMapper.xml"/>-->
+<!--    </bean>-->
+
+<!--    -->
+    <!-- 配置MapperScannaerConfigurer -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--用于配置持久层接口在哪里  -->
+        <property name="basePackage" value="top.zwzx.mapper"></property>
+
+    </bean>
+
+    <!--    sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--        绑定mybatis配置文件-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+    <!--    配置dao接口扫描包，动态实现了dao接口可以注入到spring容器中-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--        注入sqlSessionFactory-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!--        扫描到dao包-->
+        <property name="basePackage" value="top.zwzx.mapper"/>
+    </bean>
+
+
+
+</beans>
